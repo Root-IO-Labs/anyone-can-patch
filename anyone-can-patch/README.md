@@ -1,5 +1,7 @@
 # anyone-can-patch
 
+**Source repository:** [Root-IO-Labs/anyone-can-patch](https://github.com/Root-IO-Labs/anyone-can-patch)
+
 # CVE Backporting Workshop - Three Prompts for Cursor/Claude Code
 
 These prompts distill the multi-agent Patch Platoon AI system into three simplified prompts suitable for a 30-minute workshop. They focus on **application packages** (npm, pypi) only, not OS packages.
