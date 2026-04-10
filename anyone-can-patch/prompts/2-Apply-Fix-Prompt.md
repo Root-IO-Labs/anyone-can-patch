@@ -16,8 +16,11 @@ CONTEXT FROM RESEARCH:
 
 PATCHING STRATEGY:
 
+MANDATORY WORKSPACE
+- Apply changes in a **full** vulnerable **git** checkout (ideally the one created during research, e.g. `target-tree`). **Do not** satisfy this prompt using only GitHub API or raw file URLs when a clone is possible.
+
 PHASE 1 - WORKSPACE SETUP
-1. Locate or clone the vulnerable version {vulnerable_version} source code
+1. Use the vulnerable checkout from research if present; otherwise **clone** **{vulnerable_version}** as a full source tree.
 2. Create a new branch: `patch-{CVE_ID}`
 3. Verify the package has SOURCE FILES (not just compiled/dist files)
    - For npm: Check that src/ or lib/ has .js/.ts files (not just dist/)

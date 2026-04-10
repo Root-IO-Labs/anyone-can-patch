@@ -28,9 +28,15 @@ For each search result, capture:
 - Link to commit/PR/advisory
 - Brief description of what was changed
 
+MANDATORY LOCAL CHECKOUTS (Phases 3–4 — not optional)
+- **Real `git clone` checkouts** are required for Phases 3 and 4. Using **only** the GitHub API or `raw.githubusercontent.com` (or similar) **without** local clones **does not** complete this workflow.
+- **Phase 3:** After Phase 2 identifies the **upstream URL** and **ref with the fix**, clone and check out that ref in a **dedicated** directory (e.g. `fix-tree` if your example defines it).
+- **Phase 4:** Clone the **same** repo into a **second** directory at **{vulnerable_version}** (e.g. `target-tree`). Two trees, two refs.
+- **Optimization rules below do not waive** these clone steps unless the **user explicitly** allows API-only mode. If `git` is impossible, say so explicitly.
+
 PHASE 3 - FIX ANALYSIS
-1. Clone the upstream repository and check out the fix commit(s)
-2. Analyze the changes:
+1. Clone the upstream repository and check out the fix commit(s) in the dedicated fix working tree.
+2. Analyze the changes **from that checkout**:
    - How many files changed?
    - How many lines changed?
    - What type of fix? (validation, bounds checking, sanitization, etc.)
@@ -43,8 +49,8 @@ PHASE 3 - FIX ANALYSIS
    - 10 (BLOCKED): Architecture changes, refactors → NOT workshop-suitable
 
 PHASE 4 - BACKPORT ASSESSMENT
-1. Clone the vulnerable version {vulnerable_version}
-2. Compare file structure between fix version and target version:
+1. Clone the vulnerable version {vulnerable_version} into the **second** working tree (separate from the fix tree).
+2. Compare file structure between fix version and target version **using both local checkouts**:
    - Do the modified files exist in target version?
    - Are the modified functions/classes present?
    - Are there path differences? (e.g., src/ vs lib/)
@@ -89,13 +95,14 @@ Also provide:
 - Plain English summary of what the fix does
 - Specific file paths and line numbers where changes are needed
 - Any "gotchas" for backporting
+- **`git rev-parse HEAD`** in **each** of the fix and vulnerable working trees (evidence of correct refs)
 
 OPTIMIZATION RULES:
 - Target completing research in ≤10 tool calls
 - Batch all independent searches in one response (Phase 2)
 - Stop when you have "enough" information, not "perfect" information
 - If you find fix commit in NVD, you may skip GitHub search
-- If fix is complexity 8+, you can skip detailed backport assessment
+- If fix is complexity 8+, you may shorten backport **write-up**—but you **must still** run Phases 3–4 **local clones** when `git` is available; never skip clones just to save tool calls
 
 IMPORTANT NOTES:
 - Some CVEs require MULTIPLE commits - look for "follow-up" or "part 2"

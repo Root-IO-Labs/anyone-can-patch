@@ -12,3 +12,5 @@ Workshop materials for **research → apply security fix → validate** using AI
 ## Quick start
 
 Clone this repo, open it in your editor, then follow an example’s `WORKSHOP-DEMO-GUIDE.md` (for instance `examples/CVE-2025-68675-apache-airflow-2.10.5/`).
+
+**Cursor / agents:** read **`AGENTS.md`** at the repo root for non-negotiable rules (two git checkouts for research, no API-only shortcuts for Phases 3–4).
