@@ -9,3 +9,6 @@ __pycache__/
 .venv/
 venv/
 .cursor/
+
+# Facilitator-only local notes (not published)
+todo.md
