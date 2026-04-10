@@ -1,0 +1,11 @@
+# Local upstream checkouts (recreated during research; see example WORKSHOP-DEMO-GUIDE.md)
+examples/**/fix-tree/
+examples/**/target-tree/
+
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.cursor/
