@@ -7,7 +7,7 @@ Workshop materials for **research → apply security fix → validate** using AI
 ## Layout
 
 - **`anyone-can-patch/`** — Reusable prompts (`prompts/`) and skills (`skills/`). Treat as read-only when running a workshop; copy into per-CVE example folders as needed.
-- **`examples/`** — CVE-specific **filled prompts** plus **`reference/`** (completed `research.json`, patch, `PATCH.md`, `validation.json` for comparison). **`fix-tree/`** and **`target-tree/`** are gitignored; clone them per each example’s **`WORKSHOP-DEMO-GUIDE.md`**. Your own run’s outputs go **next to the prompts**, not inside **`reference/`**.
+- **`examples/`** — CVE-specific **filled prompts** plus **`reference/`** (completed `research.json`, patch, `PATCH.md`, `validation.json` for comparison). Under each example folder, upstream clones **must** use the directory names **`fix-tree/`** (fixed ref) and **`target-tree/`** (vulnerable ref)—see **`AGENTS.md`**. Those directories are **gitignored**; create them per **`WORKSHOP-DEMO-GUIDE.md`**. Your own run’s outputs go **next to the prompts**, not inside **`reference/`**.
 
 ## Quick start
 

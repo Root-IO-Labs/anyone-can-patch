@@ -4,7 +4,7 @@
 
 **Example**: `/patch-cve CVE-2025-68675 apache-airflow 2.10.5`
 
-**Prerequisites**: Run `/research-cve` first to identify the fix commit and assess feasibility. That research **should** have created a **full `git` checkout** of the vulnerable version (e.g. `target-tree`). Use that checkout for patching when it exists—**do not** replace it with API-only or single-file downloads.
+**Prerequisites**: Run `/research-cve` first. For this repo’s **`examples/`** layout, the vulnerable checkout **must** live in **`target-tree`** next to **`fix-tree`**—patch there. **Do not** replace it with API-only or single-file downloads when a full tree exists or can be cloned.
 
 ---
 
@@ -19,7 +19,7 @@ CONTEXT FROM RESEARCH:
 PATCHING STRATEGY:
 
 PHASE 1 - WORKSPACE SETUP
-1. **Prefer** the existing vulnerable **git** checkout from research (same paths the user or example defines). If none exists, **clone** the full upstream source at **{vulnerable_version}**—a real tree suitable for `git diff` and later install/tests, not snippets from the API alone.
+1. **Use `target-tree`** (vulnerable ref) from research when following this workshop layout; if missing, **clone** the full upstream at **{vulnerable_version}** into **`target-tree`** under the per-CVE example folder. The tree must be suitable for `git diff` and later install/tests, not API snippets alone.
 2. Create a new branch: `patch-{CVE_ID}`
 3. Verify the package has SOURCE FILES (not just compiled/dist files)
    - For npm: Check that src/ or lib/ has .js/.ts files (not just dist/)

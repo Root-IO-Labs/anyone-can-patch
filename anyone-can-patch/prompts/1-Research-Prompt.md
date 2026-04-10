@@ -30,8 +30,9 @@ For each search result, capture:
 
 MANDATORY LOCAL CHECKOUTS (Phases 3–4 — not optional)
 - **Real `git clone` checkouts** are required for Phases 3 and 4. Using **only** the GitHub API or `raw.githubusercontent.com` (or similar) **without** local clones **does not** complete this workflow.
-- **Phase 3:** After Phase 2 identifies the **upstream URL** and **ref with the fix**, clone and check out that ref in a **dedicated** directory (e.g. `fix-tree` if your example defines it).
-- **Phase 4:** Clone the **same** repo into a **second** directory at **{vulnerable_version}** (e.g. `target-tree`). Two trees, two refs.
+- **Directory names:** For this workshop layout, clones under the per-CVE example folder **must** be named exactly **`fix-tree`** (fixed ref) and **`target-tree`** (vulnerable **{vulnerable_version}**). Your filled prompt should set the full path (e.g. `examples/CVE-…/fix-tree`); do not rename these directories.
+- **Phase 3:** After Phase 2 identifies the **upstream URL** and **ref with the fix**, clone into **`fix-tree`** and check out that ref.
+- **Phase 4:** Clone the **same** repo into **`target-tree`** at **{vulnerable_version}**. Two trees, two refs.
 - **Optimization rules below do not waive** these clone steps unless the **user explicitly** allows API-only mode. If `git` is impossible, say so explicitly.
 
 PHASE 3 - FIX ANALYSIS
@@ -49,7 +50,7 @@ PHASE 3 - FIX ANALYSIS
    - 10 (BLOCKED): Architecture changes, refactors → NOT workshop-suitable
 
 PHASE 4 - BACKPORT ASSESSMENT
-1. Clone the vulnerable version {vulnerable_version} into the **second** working tree (separate from the fix tree).
+1. Clone the vulnerable version {vulnerable_version} into **`target-tree`** (sibling of **`fix-tree`**).
 2. Compare file structure between fix version and target version **using both local checkouts**:
    - Do the modified files exist in target version?
    - Are the modified functions/classes present?
@@ -95,7 +96,7 @@ Also provide:
 - Plain English summary of what the fix does
 - Specific file paths and line numbers where changes are needed
 - Any "gotchas" for backporting
-- **`git rev-parse HEAD`** in **each** of the fix and vulnerable working trees (evidence of correct refs)
+- **`git rev-parse HEAD`** in **`fix-tree`** and **`target-tree`** (evidence of correct refs)
 
 OPTIMIZATION RULES:
 - Target completing research in ≤10 tool calls

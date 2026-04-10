@@ -11,6 +11,7 @@ CONTEXT:
 - CVE: {CVE_ID}
 - Files modified: {list_files}
 - What the fix does: {brief_description}
+- Where to run (standard layout): patched source in **`target-tree`** under the per-CVE example folder (sibling of **`fix-tree`**)
 
 PHASE 1 - BUILD
 Build the package:

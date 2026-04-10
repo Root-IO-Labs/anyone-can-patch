@@ -2,7 +2,7 @@
 
 **Source repository:** [Root-IO-Labs/anyone-can-patch](https://github.com/Root-IO-Labs/anyone-can-patch)
 
-When this kit lives in the full workshop repo, the root **`AGENTS.md`** file states **mandatory `git` checkout** rules for CVE research (two trees; no API-only substitute for Phases 3–4).
+When this kit lives in the full workshop repo, the root **`AGENTS.md`** file states **mandatory `git` checkout** rules (two trees named exactly **`fix-tree`** and **`target-tree`** under each **`examples/<CVE-folder>/`**; no API-only substitute for Phases 3–4).
 
 # CVE Backporting Workshop - Three Prompts for Cursor/Claude Code
 

@@ -4,7 +4,7 @@
 
 **Example**: `/validate-cve CVE-2025-68675 apache-airflow 2.10.5`
 
-**Prerequisites**: Run `/patch-cve` first to apply the security fix
+**Prerequisites**: Run `/patch-cve` first. For **`examples/`** in this repo, build and test from **`target-tree`** (vulnerable checkout with the patch).
 
 ---
 
@@ -14,6 +14,7 @@ CONTEXT:
 - CVE: {CVE_ID}
 - Files modified: {list_files}
 - What the fix does: {brief_description}
+- Run location (standard layout): **`target-tree`** under the per-CVE example directory
 
 PHASE 1 - BUILD
 Build the package:

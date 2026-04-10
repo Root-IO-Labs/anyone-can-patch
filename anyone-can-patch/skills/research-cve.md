@@ -31,8 +31,9 @@ For each search result, capture:
 
 MANDATORY LOCAL CHECKOUTS (Phases 3–4 — not optional)
 - **Real `git clone` checkouts** are required for Phases 3 and 4. Inspecting the fix or target tree **only** via GitHub API, `raw.githubusercontent.com`, or ad-hoc file downloads **does not** satisfy these phases and **must not** be presented as a completed research workflow.
-- **Phase 3:** Once Phase 2 yields the **upstream URL** and the **ref containing the fix** (commit/tag/release), clone that repository and check out that ref in a **dedicated working tree** (path per user/example, e.g. `fix-tree`).
-- **Phase 4:** Clone the **same** repository into a **second** working tree checked out at **{vulnerable_version}** (path per user/example, e.g. `target-tree`). Use two directories—**not** one repo with checkout switching unless the user explicitly wants that.
+- **Directory names (anyone-can-patch / this repo):** Under each per-CVE **`examples/<folder>/`**, clones **must** be named exactly **`fix-tree`** (fixed ref) and **`target-tree`** (vulnerable **{vulnerable_version}**). Use those names when the user is following this workshop layout; filled prompts in **`examples/`** will embed the full path.
+- **Phase 3:** Once Phase 2 yields the **upstream URL** and the **ref containing the fix** (commit/tag/release), clone into **`fix-tree`** and check out that ref.
+- **Phase 4:** Clone the **same** repository into **`target-tree`** (sibling of **`fix-tree`**) checked out at **{vulnerable_version}**. Use two directories—**not** one repo with checkout switching unless the user explicitly wants that.
 - **Optimization / tool budgets below do not override** these steps. If you cannot run `git`, state that clearly and do not claim Phases 3–4 are fully satisfied.
 
 PHASE 3 - FIX ANALYSIS
@@ -50,7 +51,7 @@ PHASE 3 - FIX ANALYSIS
    - 10 (BLOCKED): Architecture changes, refactors → NOT workshop-suitable
 
 PHASE 4 - BACKPORT ASSESSMENT
-1. Clone the vulnerable version {vulnerable_version} into the **second** working tree (separate from the fix tree).
+1. Clone the vulnerable version {vulnerable_version} into **`target-tree`** (sibling of **`fix-tree`**).
 2. Compare file structure between fix version and target version **using both local checkouts**:
    - Do the modified files exist in target version?
    - Are the modified functions/classes present?
@@ -96,7 +97,7 @@ Also provide:
 - Plain English summary of what the fix does
 - Specific file paths and line numbers where changes are needed
 - Any "gotchas" for backporting
-- **`git rev-parse HEAD`** (and short ref description if helpful) **for each** of the fix and vulnerable working trees
+- **`git rev-parse HEAD`** (and short ref description if helpful) in **`fix-tree`** and **`target-tree`**
 
 OPTIMIZATION RULES:
 - Target completing research in ≤10 tool calls
