@@ -14,9 +14,16 @@ These prompts are designed to run **with no permissions flags** in both Claude C
 
 The workflow clones repositories, analyzes code, and generates patches purely through local operations. You maintain full control over what happens and when.
 
-## Prompt 0: Bootstrap (optional)
+## Prompt 0: Helpers (optional)
 
-**Orientation / practice folder:** `prompts/0-Bootstrap-Orientation.md`, `prompts/0-Bootstrap-Practice-Folder.md` — see root **`workshop.md`**.
+Cut/paste from root **`workshop.md`** (preferred) or these files:
+
+- `prompts/0-Bootstrap-Orientation.md`
+- `prompts/0-Bootstrap-Practice-Folder.md`
+- `prompts/0-Sync-Apply-Context.md` — fill apply CONTEXT from `research.json`
+- `prompts/0-Sync-Validate-Context.md` — fill validate CONTEXT from apply output
+
+Skills under `skills/` are optional; the live workshop uses cut/paste prompts only.
 
 ## Prompt 1: Research & Identify Backportable Fix
 

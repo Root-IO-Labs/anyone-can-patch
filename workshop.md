@@ -1,24 +1,24 @@
 # Workshop: CVE backport with Cursor
 
-Participant quickstart. You start by cloning **this** repository, open it in Cursor, then paste three prompts (with skills) to research → apply → validate a security fix.
+Clone this repo, open it in Cursor (**Agent** mode), then **cut and paste** prompts into chat. Read each helper prompt below before you paste it so you understand what you are asking for.
 
-**Facilitator depth / talk-track:** see `examples/CVE-2025-68675-apache-airflow-2.10.5/WORKSHOP-DEMO-GUIDE.md`.  
-**Agent rules:** see `AGENTS.md` at the repo root.
+**Facilitator depth:** `examples/CVE-2025-68675-apache-airflow-2.10.5/WORKSHOP-DEMO-GUIDE.md`  
+**Agent rules:** `AGENTS.md`  
+**Optional (not used in these steps):** skills under `anyone-can-patch/skills/` — same workflow if you prefer `@` skills later.
 
 ---
 
 ## Prerequisites
 
-- [Cursor](https://cursor.com/) with **Agent** mode (needs terminal / network / file edits)
-- `git` on your PATH
-- Python 3.9+ and `pip` (3.10+ preferred; for the Airflow validate step)
-- Network access (GitHub, NVD, `pip`)
-- Disk: a few GB free (Airflow clones + install)
-- Time: ~30–45 minutes for the default example (Airflow shallow clones ~2–5+ min; `pip install -e .` can take longer)
+- Cursor with **Agent** mode (terminal, network, file edits)
+- `git`, Python 3.9+ / `pip`, network
+- A few GB disk; ~30–45 minutes (Airflow clones + install take most of it)
 
-**Validate tip:** If `pip install -e .` fails building `google-re2` from source, run  
-`pip install 'google-re2>=1.0' --only-binary=:all:`  
-then retry the editable install.
+If `pip install -e .` fails on `google-re2`, run this first, then retry install:
+
+```
+pip install 'google-re2>=1.0' --only-binary=:all:
+```
 
 ---
 
@@ -29,9 +29,38 @@ git clone https://github.com/Root-IO-Labs/anyone-can-patch.git
 cd anyone-can-patch
 ```
 
-In Cursor: **File → Open Folder** and select the `anyone-can-patch` directory (the repo root). Paths in the prompts and `@` skills assume that root.
+In Cursor: **File → Open Folder** → select this repo’s root (`anyone-can-patch`).
 
-Optional orientation (paste into a new Agent chat):
+**Two clones, different jobs:**
+
+1. **This repo** — you clone it now (Step 0).
+2. **Apache Airflow** into `fix-tree/` and `target-tree/` — the **agent** clones those during research. You do not clone Airflow by hand.
+
+---
+
+## Workshop example folder (prompts are already filled)
+
+Work in:
+
+```
+examples/CVE-2025-68675-apache-airflow-2.10.5/
+```
+
+For this live example, **`1-Research-Prompt.md`**, **`2-Apply-Fix-Prompt.md`**, and **`3-Validate-Prompt.md` are already filled** with CVE-2025-68675, apache-airflow, 2.10.5, and the correct `fix-tree` / `target-tree` paths. **Do not** rewrite the CVE/package/version for the default workshop.
+
+- Your outputs go **next to those prompts** (`research.json`, patch file, `PATCH.md`, `validation.json`).
+- **`reference/`** is the answer key — open to compare; **do not overwrite**.
+- Do not `git commit` / `git push` the Airflow trees unless the facilitator says so.
+
+How to paste a **phase** prompt: open the `.md` file → read it → copy **only the fenced block** → paste into a new Agent chat → send.
+
+How to paste a **helper** prompt: copy the fenced block from **this** file (below) into chat.
+
+---
+
+## Step 1 — Orientation (helper, optional)
+
+Paste into a new Agent chat:
 
 ```
 You are helping me run the anyone-can-patch workshop in this workspace.
@@ -39,84 +68,151 @@ You are helping me run the anyone-can-patch workshop in this workspace.
 1. Read AGENTS.md and workshop.md
 2. Summarize: where prompts live, where my outputs go, where reference/ is, and why fix-tree and target-tree names matter
 3. Confirm whether fix-tree/ and target-tree/ already exist under examples/CVE-2025-68675-apache-airflow-2.10.5/
-4. Do NOT clone Airflow or start CVE research yet—report only
+4. Remind me that the three phase prompts in that folder are already filled for CVE-2025-68675 — I should not rewrite CVE/package/version
+5. Do NOT clone Airflow or start CVE research yet—report only
 ```
 
-Or `@` `anyone-can-patch/prompts/0-Bootstrap-Orientation.md` and paste the fenced block from that file.
+Same text lives in `anyone-can-patch/prompts/0-Bootstrap-Orientation.md`.
 
 ---
 
-## Two kinds of “clone” (read once)
+## Step 2 — Research
 
-| What | Who | When |
-|------|-----|------|
-| **This workshop repo** (`anyone-can-patch`) | You | Step 0 (now) |
-| **Upstream package** (`fix-tree` + `target-tree`) | The agent | During **research**, after it discovers the upstream URL and refs |
-
-There is **no** separate workshop step where you manually clone Apache Airflow. The research prompt/skill does that into directories named exactly **`fix-tree`** (fixed ref) and **`target-tree`** (vulnerable version).
+1. Open `examples/CVE-2025-68675-apache-airflow-2.10.5/1-Research-Prompt.md` and read it.
+2. Copy its fenced prompt block into a **new** Agent chat and send.
+3. Wait until the agent has written **`research.json`** next to the prompts and created **`fix-tree/`** and **`target-tree/`**.
+4. In the editor, open `research.json` and expand both tree folders in the file tree (see **How to confirm** below). Do not continue if there are no real trees.
 
 ---
 
-## Default path — shipped Airflow example
+## Step 3 — Sync apply prompt from research (helper)
 
-Use the filled example (no need to invent a new CVE folder):
-
-`examples/CVE-2025-68675-apache-airflow-2.10.5/`
-
-| Role | Path |
-|------|------|
-| Copy-paste prompts | `1-Research-Prompt.md`, `2-Apply-Fix-Prompt.md`, `3-Validate-Prompt.md` |
-| Skills to `@` | `anyone-can-patch/skills/research-cve.md`, `patch-cve.md`, `validate-cve.md` |
-| Answer key (compare only) | `reference/` — **do not overwrite** |
-| Your outputs | **Next to the prompts** in that example folder (`research.json`, patch file, `PATCH.md`, `validation.json`) |
-| Upstream trees (gitignored) | `fix-tree/`, `target-tree/` — created by research |
-
-### How to run each phase in Cursor
-
-1. Open the prompt file for that phase; skim the “Before you copy-paste” notes.
-2. Start a chat in **Agent** mode.
-3. `@` the matching skill under `anyone-can-patch/skills/`.
-4. Copy **only the fenced prompt block** into the chat and send.
-5. Save artifacts where the prompt says (example folder root, not `reference/`).
-
-| Phase | Prompt file | `@` skill | You should get |
-|-------|-------------|-----------|----------------|
-| Research | `1-Research-Prompt.md` | `research-cve.md` | `research.json` + `fix-tree/` + `target-tree/` (`git rev-parse HEAD` in each) |
-| Apply fix | `2-Apply-Fix-Prompt.md` | `patch-cve.md` | Edits under `target-tree/` on `patch-CVE-2025-68675` + `CVE-2025-68675-target-tree.patch` |
-| Explain | (ask in chat) | — | `PATCH.md` next to the prompts |
-| Validate | `3-Validate-Prompt.md` | `validate-cve.md` | Install + tests in `target-tree/` → `validation.json` |
-
-**Between research and apply:** fill **CONTEXT FROM RESEARCH** in `2-Apply-Fix-Prompt.md` from **your** `research.json`, then paste.
-
-**Between apply and validate:** align CONTEXT in `3-Validate-Prompt.md` with the files/branch/patch you actually produced.
-
-Workshop norm: **no `git commit` / `git push`** of the Airflow trees unless the facilitator says otherwise.
-
----
-
-## Practice path — fresh folder (optional)
-
-Use this if you want a clean run without reusing trees under the shipped example (e.g. facilitator dry-run). Keep the original example and `reference/` intact.
-
-Paste (or `@` `anyone-can-patch/prompts/0-Bootstrap-Practice-Folder.md`):
+The apply prompt’s **CONTEXT FROM RESEARCH** section must match **your** `research.json`. Paste this helper so the agent updates the file for you (do not invent CONTEXT by hand):
 
 ```
-Bootstrap a practice run of the Airflow CVE workshop without touching the answer-key example.
+Update the apply-fix prompt from my research output. Do not start patching yet.
 
-1. Create examples/CVE-2025-68675-apache-airflow-2.10.5-practice/
-2. Copy 1-Research-Prompt.md, 2-Apply-Fix-Prompt.md, and 3-Validate-Prompt.md from anyone-can-patch/prompts/ into that folder
-3. Fill CVE-2025-68675, apache-airflow, 2.10.5 everywhere; set fix-tree and target-tree paths under …-practice/
-4. Do NOT copy reference/, fix-tree/, or target-tree/ from the original example
-5. Stop and show the folder listing + a short “next: paste research prompt” note
+1. Read examples/CVE-2025-68675-apache-airflow-2.10.5/research.json
+2. Edit examples/CVE-2025-68675-apache-airflow-2.10.5/2-Apply-Fix-Prompt.md
+3. Fill CONTEXT FROM RESEARCH (fixed version, fix commit SHAs/PRs, files to modify, complexity) from research.json
+4. Keep CVE-2025-68675, apache-airflow, 2.10.5, branch patch-CVE-2025-68675, target-tree path, and patch filename CVE-2025-68675-target-tree.patch consistent
+5. Prefer the minimal secrets_masker / DEFAULT_SENSITIVE_FIELDS backport for this workshop
+6. Show me a short diff summary of what you changed in 2-Apply-Fix-Prompt.md, then stop
 ```
 
-Then run the same four phases, but use the prompts under `…-practice/` and save outputs there.
+Same text lives in `anyone-can-patch/prompts/0-Sync-Apply-Context.md`.
+
+Then open `2-Apply-Fix-Prompt.md` in the editor and skim CONTEXT before Step 4.
 
 ---
 
-## Soft reset (reusing the shipped example)
+## Step 4 — Apply fix
 
-If `fix-tree/` or `target-tree/` already exist and you need a clean research run:
+1. Open `examples/CVE-2025-68675-apache-airflow-2.10.5/2-Apply-Fix-Prompt.md` and read the updated CONTEXT.
+2. Copy its fenced prompt block into a **new** Agent chat and send.
+3. Expect: branch `patch-CVE-2025-68675` on `target-tree`, edits under `target-tree/`, and `CVE-2025-68675-target-tree.patch` next to the prompts.
+4. In the editor, open the patch file and `target-tree/airflow/utils/log/secrets_masker.py` (see **How to confirm**).
+
+---
+
+## Step 5 — Write PATCH.md
+
+Paste into chat (same thread as apply or a new one):
+
+```
+Write examples/CVE-2025-68675-apache-airflow-2.10.5/PATCH.md next to the prompts (not under reference/).
+
+Use my research.json, CVE-2025-68675-target-tree.patch, and the fix-tree / target-tree layout.
+Explain the CVE in plain language, what the minimal backport does (DEFAULT_SENSITIVE_FIELDS / proxy and proxies), and what we did not include (e.g. broader PRs).
+Do not overwrite reference/PATCH.md.
+```
+
+Open `PATCH.md` in the editor when done.
+
+---
+
+## Step 6 — Sync validate prompt from apply output (helper)
+
+Paste:
+
+```
+Update the validate prompt from my apply-fix output. Do not start install/tests yet.
+
+1. Inspect examples/CVE-2025-68675-apache-airflow-2.10.5/ (research.json, CVE-2025-68675-target-tree.patch, target-tree changes)
+2. Edit examples/CVE-2025-68675-apache-airflow-2.10.5/3-Validate-Prompt.md
+3. Fill CONTEXT: CVE, files modified, short fix summary, target-tree path, branch patch-CVE-2025-68675, patch filename, build command (pip install -e .), test command (pytest tests/utils/log/test_secrets_masker.py)
+4. Keep OUTPUT json aligned with validation.json we will save next to the prompts
+5. Show me a short diff summary of what you changed in 3-Validate-Prompt.md, then stop
+```
+
+Same text lives in `anyone-can-patch/prompts/0-Sync-Validate-Context.md`.
+
+Open `3-Validate-Prompt.md` and skim CONTEXT before Step 7.
+
+---
+
+## Step 7 — Validate
+
+1. Open `examples/CVE-2025-68675-apache-airflow-2.10.5/3-Validate-Prompt.md` and read it.
+2. Copy its fenced prompt block into a **new** Agent chat and send.
+3. Expect install + targeted tests in `target-tree/`, then **`validation.json`** next to the prompts.
+4. Open `validation.json` in the editor (see **How to confirm**).
+
+---
+
+## How to confirm it worked
+
+Use the Cursor file tree and open files in the editor. Don’t rely only on the chat summary.
+
+Folder: `examples/CVE-2025-68675-apache-airflow-2.10.5/`  
+Outputs sit **next to** the prompts. **`reference/`** is compare-only.
+
+### After research
+
+Open **`research.json`**. Check:
+
+- `cve_id` / `package` / `vulnerable_version` match the exercise
+- `recommendation` is `PROCEED` (or `CAUTION` you accept)
+- `fix_commits` includes PR #61906 / SHA starting `a260fb7`
+- complexity looks **LOW**
+
+Expand **`fix-tree/`** and **`target-tree/`** in the file tree so both are real folders.
+
+Optional: open **`reference/research.json`** side by side.
+
+### After apply
+
+Open **`CVE-2025-68675-target-tree.patch`**. Look for:
+
+- `+        "proxy",`
+- `+        "proxies",`
+
+Then open `target-tree/airflow/utils/log/secrets_masker.py` and confirm those names are in `DEFAULT_SENSITIVE_FIELDS`.
+
+Optional: open **`reference/CVE-2025-68675-target-tree.patch`**.
+
+### After PATCH.md
+
+Open **`PATCH.md`**. Plain-language CVE, `secrets_masker.py` / `DEFAULT_SENSITIVE_FIELDS`, minimal backport.
+
+### After validate
+
+Open **`validation.json`**. Check:
+
+- `build.success` is `true`
+- secrets_masker tests mostly passing (**58 passed**, **1 xfailed** is expected)
+- `verdict` is **`APPROVED`** (or `NEEDS_REVIEW` with notes you understand)
+- `security_review.root_cause_addressed` is `true`
+
+Optional: open **`reference/validation.json`**.
+
+**Bottom line:** PROCEED → patch adds `proxy`/`proxies` → source matches → `validation.json` says APPROVED.
+
+---
+
+## Soft reset (helper)
+
+If trees already exist and you need a clean research run, paste:
 
 ```
 I will re-run research in examples/CVE-2025-68675-apache-airflow-2.10.5/.
@@ -126,87 +222,38 @@ Do not modify reference/. Do not start NVD research until I say so.
 
 ---
 
-## Done checklist
+## Practice folder (helper, optional)
 
-- [ ] `research.json` at example root (not under `reference/`)
-- [ ] `fix-tree/` and `target-tree/` present; HEADs recorded
-- [ ] `target-tree` on `patch-CVE-2025-68675` with `proxy` / `proxies` in `DEFAULT_SENSITIVE_FIELDS` (`airflow/utils/log/secrets_masker.py`)
-- [ ] `CVE-2025-68675-target-tree.patch` at example root matches `git diff`
-- [ ] `PATCH.md` and `validation.json` at example root
-- [ ] (Optional) Compared to `reference/` when stuck
+Only if you want a second run without touching the shipped example. Paste:
 
----
+```
+Bootstrap a practice run of the Airflow CVE workshop without touching the answer-key example.
 
-## How to confirm it worked
+1. Create examples/CVE-2025-68675-apache-airflow-2.10.5-practice/
+2. Copy 1-Research-Prompt.md, 2-Apply-Fix-Prompt.md, and 3-Validate-Prompt.md from anyone-can-patch/prompts/ into that folder
+3. Fill CVE-2025-68675, apache-airflow, 2.10.5 everywhere; set fix-tree and target-tree paths under examples/CVE-2025-68675-apache-airflow-2.10.5-practice/
+4. Do NOT copy reference/, fix-tree/, or target-tree/ from the original example
+5. Stop and show the folder listing + a short “next: paste research prompt” note
+```
 
-Use the Cursor file tree and open files in the editor. Don’t rely only on the chat summary.
+Then repeat Steps 2–7 using the prompts under `…-practice/`.
 
-Example folder: `examples/CVE-2025-68675-apache-airflow-2.10.5/`  
-(or `…-practice/` if you used the practice path). Your outputs sit **next to** the prompt files. **`reference/`** is the answer key—open it to compare, don’t overwrite it.
-
-### 1. Research — `research.json` and the two trees
-
-Open **`research.json`**. Confirm:
-
-- `cve_id`, `package`, and `vulnerable_version` match the exercise
-- `recommendation` is `PROCEED` (or `CAUTION` with a reason you accept)
-- `fix_commits` includes the secrets-masker fix (PR #61906 / SHA starting with `a260fb7`)
-- complexity looks **LOW** for this CVE
-
-In the file tree, expand **`fix-tree/`** and **`target-tree/`** so both exist as real folders (not only links in chat).
-
-Optional: open **`reference/research.json`** side by side—SHAs and recommendation should line up even if wording differs.
-
-### 2. Apply — patch file and the changed source
-
-Open **`CVE-2025-68675-target-tree.patch`**. Look for the two added lines:
-
-- `+        "proxy",`
-- `+        "proxies",`
-
-under `DEFAULT_SENSITIVE_FIELDS` in `airflow/utils/log/secrets_masker.py`.
-
-Then open the real file:
-
-`target-tree/airflow/utils/log/secrets_masker.py`
-
-Find `DEFAULT_SENSITIVE_FIELDS` and confirm **`proxy`** and **`proxies`** are in the frozenset (near `password` / `private_key` / `secret`).
-
-Optional: open **`reference/CVE-2025-68675-target-tree.patch`** and compare—same two additions.
-
-### 3. Explain — `PATCH.md`
-
-Open **`PATCH.md`**. It should explain the CVE in plain language, name `secrets_masker.py` / `DEFAULT_SENSITIVE_FIELDS`, and describe this as the **minimal** backport.
-
-### 4. Validate — `validation.json`
-
-Open **`validation.json`**. Confirm:
-
-- `build.success` is `true`
-- `regression_tests` reports the secrets_masker tests mostly passing (**58 passed** and **1 xfailed** is expected for this example)
-- `verdict` is **`APPROVED`** (or `NEEDS_REVIEW` with notes you understand)
-- `security_review.root_cause_addressed` is `true`
-
-Optional: open **`reference/validation.json`** and compare verdicts and test counts.
-
-**Bottom line:** PROCEED → patch shows `proxy`/`proxies` → source file matches → `validation.json` says APPROVED means the run worked.
+Same text lives in `anyone-can-patch/prompts/0-Bootstrap-Practice-Folder.md`.
 
 ---
 
 ## Stuck?
 
-| Symptom | What to do |
-|---------|------------|
-| Research finished with no local trees | Incomplete — require real clones + `git rev-parse HEAD` (`AGENTS.md`). Re-run research; do not accept API/raw-only. |
-| Agent wrote into `reference/` | Move your files to the example root; restore `reference/` from git if needed. |
-| Apply changed the wrong paths | Confirm CONTEXT and `target-tree` path match your example folder. |
-| `pip install` / `google-re2` issues | Prefetch the wheel (`pip install 'google-re2>=1.0' --only-binary=:all:`), then `pip install -e .`. Or run targeted tests: `pytest tests/utils/log/test_secrets_masker.py` from `target-tree`. |
-| Lost / too slow | Compare your artifacts to `reference/` and continue to the next phase; document the gap. |
+- **No trees after research** — incomplete; re-run Step 2; do not accept API/raw-only (`AGENTS.md`).
+- **Wrote into `reference/`** — move outputs to the example root; restore `reference/` from git if needed.
+- **Wrong paths on apply** — re-run Step 3 sync, then Step 4.
+- **`google-re2` / install** — use the pip tip under Prerequisites; or keep `pytest tests/utils/log/test_secrets_masker.py` as the focused check.
+- **Lost / slow** — compare your files to `reference/` and continue; document the gap.
 
 ---
 
-## Reference links (default CVE)
+## Links
 
 - NVD: https://nvd.nist.gov/vuln/detail/CVE-2025-68675  
 - Upstream PR (minimal fix): https://github.com/apache/airflow/pull/61906  
-- Kit README: `anyone-can-patch/README.md`
+- Kit: `anyone-can-patch/README.md`

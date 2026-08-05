@@ -11,7 +11,7 @@ Workshop materials for **research → apply security fix → validate** using AI
 
 ## Quick start
 
-**Live workshop (participants):** clone this repo, open the folder in Cursor, then follow **[`workshop.md`](workshop.md)** — Step 0 through the Airflow example.
+**Live workshop (participants):** clone this repo, open the folder in Cursor, then follow **[`workshop.md`](workshop.md)** — cut/paste Steps 0–7 (helpers inline; phase prompts in the example folder are pre-filled).
 
 ```bash
 git clone https://github.com/Root-IO-Labs/anyone-can-patch.git
