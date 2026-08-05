@@ -14,6 +14,10 @@ These prompts are designed to run **with no permissions flags** in both Claude C
 
 The workflow clones repositories, analyzes code, and generates patches purely through local operations. You maintain full control over what happens and when.
 
+## Prompt 0: Bootstrap (optional)
+
+**Orientation / practice folder:** `prompts/0-Bootstrap-Orientation.md`, `prompts/0-Bootstrap-Practice-Folder.md` — see root **`workshop.md`**.
+
 ## Prompt 1: Research & Identify Backportable Fix
 
 **When to use:** You have a CVE ID and a vulnerable package version, and need to find the fix commit and assess backportability.
